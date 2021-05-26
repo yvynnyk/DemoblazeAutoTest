@@ -2,8 +2,6 @@
 using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using System.Collections;
-using System.Collections.Generic;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 
@@ -22,9 +20,9 @@ namespace DemoblazeAutoTest.HomeTask1
         {
             driverChrome = new ChromeDriver();
             driverChrome.Manage().Window.Maximize();
+            wait = new WebDriverWait(driverChrome, TimeSpan.FromSeconds(5));
             userName = "userTest001";
             userPassword = "testPassword";
-            wait = new WebDriverWait(driverChrome, TimeSpan.FromSeconds(5));
         }
 
         [Test]
@@ -48,7 +46,7 @@ namespace DemoblazeAutoTest.HomeTask1
                 //xPath (complex) = //form//div[@class='form-group']//label[@for='log-name']/following-sibling::input
                 //cssSelector     = input[id="loginusername"]
             inputUsername.Clear();
-            inputUsername.SendKeys("userTest001");
+            inputUsername.SendKeys(userName);
             
             IWebElement inputPassword = driverChrome.FindElement(By.Id("loginpassword"));
             //other options:
@@ -65,14 +63,14 @@ namespace DemoblazeAutoTest.HomeTask1
             IWebElement logoutButton = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("logout2")));
             //other options:
                 //xPath (complex) = //a[@onclick="logOut()"]
-                //cssSelector     = a[id$='out2']
+            //cssSelector     = a[id$='out2']
 
             IWebElement welcomeUsername = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("nameofuser")));
 
             Assert.Multiple(() =>
             {
                 Assert.That(logoutButton.Displayed, Is.True, "Logout is not displayed");
-                Assert.That(welcomeUsername.Text.Split()[1], Is.EqualTo(userName), "Actual username differs from expected");
+                Assert.That(welcomeUsername.Text, Is.EqualTo("Welcome " + userName), "Actual username differs from expected");
             });
         }
 
